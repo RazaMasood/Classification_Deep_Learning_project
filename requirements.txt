@@ -1,0 +1,16 @@
+tensorflow
+pandas
+dvc
+mlflow
+notebook
+numpy
+matplotlip
+seaborn
+python-box
+pyYAML
+tqdm
+ensure
+joblib
+types-pyYAML
+scipy
+gdown
