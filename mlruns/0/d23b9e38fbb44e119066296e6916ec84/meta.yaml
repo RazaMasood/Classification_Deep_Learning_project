@@ -1,0 +1,15 @@
+artifact_uri: file:///home/ai/Masood/Classification_Deep_Learning_project/mlruns/0/d23b9e38fbb44e119066296e6916ec84/artifacts
+end_time: 1728884651857
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: d23b9e38fbb44e119066296e6916ec84
+run_name: intrigued-gull-421
+run_uuid: d23b9e38fbb44e119066296e6916ec84
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1728884647915
+status: 4
+tags: []
+user_id: ai

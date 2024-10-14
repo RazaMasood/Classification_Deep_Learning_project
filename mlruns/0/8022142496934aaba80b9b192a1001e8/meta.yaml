@@ -1,0 +1,15 @@
+artifact_uri: file:///home/ai/Masood/Classification_Deep_Learning_project/mlruns/0/8022142496934aaba80b9b192a1001e8/artifacts
+end_time: 1728883880641
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 8022142496934aaba80b9b192a1001e8
+run_name: efficient-ray-523
+run_uuid: 8022142496934aaba80b9b192a1001e8
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1728883880637
+status: 3
+tags: []
+user_id: ai
