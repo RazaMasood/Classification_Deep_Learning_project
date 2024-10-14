@@ -14,4 +14,5 @@ joblib
 types-PyYAML
 scipy
 gdown
+fastapi
 -e .
