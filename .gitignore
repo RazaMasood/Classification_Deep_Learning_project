@@ -168,3 +168,10 @@ mlruns/*
 .dvc/*
 .dvcignore
 dvc.lock
+
+# Ignore DVC cache
+/.dvc/cache/
+
+# Ignore DVC temp files
+/.dvc/tmp/
+.dvc/config.local
