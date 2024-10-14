@@ -161,9 +161,10 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# Ignore directories and files
 research/*
 artifacts/*
 mlruns/*
-dvc.lock
-.dvcignore
 .dvc/*
+.dvcignore
+dvc.lock
