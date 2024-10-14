@@ -18,7 +18,7 @@ jobs:
   build-and-run-image:
     name: Build and Run Docker Image
     needs: integration
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
