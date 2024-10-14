@@ -165,9 +165,6 @@ cython_debug/
 research/*
 artifacts/*
 mlruns/*
-.dvc/*
-.dvcignore
-dvc.lock
 
 # Ignore DVC cache
 /.dvc/cache/
