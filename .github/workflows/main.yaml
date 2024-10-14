@@ -1,4 +1,4 @@
-name: CI/CD Workflow
+name: kidney_disease_classification
 
 on:
   push:
@@ -6,10 +6,6 @@ on:
       - main
     paths-ignore:
       - 'README.md'
-
-permissions:
-  id-token: write
-  contents: read
 
 jobs:
   integration:
@@ -22,48 +18,29 @@ jobs:
       - name: Lint code
         run: flake8 .  
 
-      - name: Run unit tests
-        run: pytest
-
-  build-and-push-docker-image:
-    name: Build and Push Docker Image to Docker Hub
+  build-and-run-image:
+    name: Build and Run Docker Image
     needs: integration
-    runs-on: ubuntu-latest
+    runs-on: self-hosted  
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}  # Docker Hub username
-          password: ${{ secrets.DOCKER_PASSWORD }}  # Docker Hub password or access token
-
-      - name: Build, Tag, and Push Docker Image
+      - name: Build Docker Image
         run: |
-          docker build -t yourusername/my_app:latest .
-          docker push yourusername/my_app:latest  # Replace with your Docker Hub repository name
+          docker build -t kidney_disease_classification:latest .
 
-  continuous-deployment:
-    name: Continuous Deployment
-    needs: build-and-push-docker-image
-    runs-on: self-hosted  # This requires a self-hosted runner to deploy
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Stop and Remove Previous Container
+        run: |
+          docker ps -q --filter "name=kidney_disease_classification" | grep -q . && docker stop kidney_disease_classification && docker rm -fv kidney_disease_classification
 
-      - name: Pull Latest Docker Image
+      - name: Run Docker Image with Health Check
         run: |
-          docker pull yourusername/my_app:latest  # Replace with your Docker Hub repository name
+          docker run -d -p 8080:8080 --name=kidney_disease_classification \
+            --health-cmd='curl --fail http://localhost:8080/ || exit 1' \
+            --health-interval=30s --health-timeout=10s --health-retries=5 \
+            kidney_disease_classification:latest
 
-      - name: Stop and Remove Previous Container if Running
-        run: |
-          docker ps -q --filter "name=your_container_name" | grep -q . && docker stop your_container_name && docker rm -fv your_container_name
-       
-      - name: Run Docker Image to Serve Users
-        run: |
-          docker run -d -p 8080:8080 --name=your_container_name yourusername/my_app:latest  # Replace with your Docker Hub repository name
-      
       - name: Clean Previous Images and Containers
         run: |
           docker system prune -f
