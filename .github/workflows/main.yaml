@@ -29,8 +29,12 @@ jobs:
 
       - name: Stop and Remove Previous Container
         run: |
-          docker ps -q --filter "name=kidney_disease_classification" | grep -q . && docker stop kidney_disease_classification && docker rm -fv kidney_disease_classification
-
+          if [ "$(docker ps -q --filter "name=kidney_disease_classification")" ]; then
+            docker stop kidney_disease_classification
+            docker rm -fv kidney_disease_classification
+          else
+            echo "No container to stop or remove."
+          fi
       - name: Run Docker Image with Health Check
         run: |
           docker run -d -p 8080:8080 --name=kidney_disease_classification \
