@@ -1,0 +1,113 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/kidney_Disease_classifier/pipeline/data_ingestion.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 6ae4bb05847efade1229cb488dadfa84
+      size: 567
+    - path: src/kidney_Disease_classifier/pipeline/data_ingestion.py
+      hash: md5
+      md5: f0fd18d3fc1117b03c83dbf4273970bc
+      size: 916
+    outs:
+    - path: artifacts/data_ingestion/CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone
+      hash: md5
+      md5: 2d66f547f76aef6755d0ae307a5c81f0.dir
+      size: 115639789
+      nfiles: 800
+  prepare_base_model:
+    cmd: python src/kidney_Disease_classifier/pipeline/prepare_base_model.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 6ae4bb05847efade1229cb488dadfa84
+      size: 567
+    - path: src/kidney_Disease_classifier/pipeline/prepare_base_model.py
+      hash: md5
+      md5: 118acb1407c534cf27dbf44f85324a6f
+      size: 1005
+    params:
+      params.yaml:
+        CLASSES: 4
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+        INCLUDE_TOP: false
+        LEARNING_RATE: 0.001
+        WEIGHTS: imagenet
+    outs:
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 4d86d9a97854796bbdf314b71ba257cd.dir
+      size: 118255264
+      nfiles: 2
+  training:
+    cmd: python src/kidney_Disease_classifier/pipeline/model_training.py
+    deps:
+    - path: artifacts/data_ingestion/CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone
+      hash: md5
+      md5: 2d66f547f76aef6755d0ae307a5c81f0.dir
+      size: 115639789
+      nfiles: 800
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 4d86d9a97854796bbdf314b71ba257cd.dir
+      size: 118255264
+      nfiles: 2
+    - path: config/config.yaml
+      hash: md5
+      md5: 6ae4bb05847efade1229cb488dadfa84
+      size: 567
+    - path: src/kidney_Disease_classifier/pipeline/model_training.py
+      hash: md5
+      md5: 0adb8ca4b8c8bcb276df558177d7a668
+      size: 916
+    params:
+      params.yaml:
+        AUGMENTATION: true
+        BATCH_SIZE: 2
+        EPOCHS: 1
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 94e47a7df5d3201ac0779553323d999b
+      size: 59738928
+  evaluation:
+    cmd: python src/kidney_Disease_classifier/pipeline/model_evaluation_mlflow.py
+    deps:
+    - path: artifacts/data_ingestion/CT-KIDNEY-DATASET-Normal-Cyst-Tumor-Stone
+      hash: md5
+      md5: 2d66f547f76aef6755d0ae307a5c81f0.dir
+      size: 115639789
+      nfiles: 800
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 94e47a7df5d3201ac0779553323d999b
+      size: 59738928
+    - path: config/config.yaml
+      hash: md5
+      md5: 6ae4bb05847efade1229cb488dadfa84
+      size: 567
+    - path: src/kidney_Disease_classifier/pipeline/model_evaluation_mlflow.py
+      hash: md5
+      md5: 8b0d933e12382b0906e3026bb8e3a794
+      size: 938
+    params:
+      params.yaml:
+        BATCH_SIZE: 2
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: scores.json
+      hash: md5
+      md5: 2be5a3c8ba74a8469bde201b806b694f
+      size: 70
